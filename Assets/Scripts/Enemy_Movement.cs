@@ -13,6 +13,7 @@ public class Enemy_Movement : MonoBehaviour
     public float followDistance = 5f;
     bool alert = false;
     public float distMult = 1.5f;
+    float previousSpeed;
 
     // Update is called once per frame
     void Update()
@@ -29,6 +30,7 @@ public class Enemy_Movement : MonoBehaviour
         }else{
             alert = false;
         }
+        Debug.Log(moveSpeed);
         
     }
     void followPlayer(){
@@ -36,6 +38,16 @@ public class Enemy_Movement : MonoBehaviour
         Vector2 direction = (player.position - transform.position).normalized;
         // Move the enemy towards the player at the specified movement speed
         transform.position = Vector2.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
+    }
+
+    public void InvokeStop(){
+        CancelInvoke("RestoreMovement");
+        previousSpeed = moveSpeed;
+        moveSpeed = 0;
+        Invoke("RestoreMovement", 1.5f);
+    }
+    void RestoreMovement(){
+        moveSpeed = previousSpeed;
     }
 }
 

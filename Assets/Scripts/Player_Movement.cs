@@ -9,6 +9,7 @@ public class Player_Movement : MonoBehaviour
     Rigidbody2D rb;
     // Declare a float variable to set the player's movement speed
     public float moveSpeed;
+    public bool ableToMove = true;
 
     // Start is called before the first frame update
     void Start()
@@ -22,13 +23,28 @@ public class Player_Movement : MonoBehaviour
     // FixedUpdate is called at a fixed interval and is used for physics updates
     void FixedUpdate()
     {
-        // Get the horizontal input (A/D or Left/Right arrow keys) and store it in moveX
-        float moveX = Input.GetAxisRaw("Horizontal");
-        // Get the vertical input (W/S or Up/Down arrow keys) and store it in moveY
-        float moveY = Input.GetAxisRaw("Vertical");
-        // Create a new Vector2 for the movement direction based on moveX and moveY
-        Vector2 movement = new Vector2(moveX, moveY);
-        // Set the player's velocity to the movement direction multiplied by the movement speed
-        rb.velocity = movement * moveSpeed;
+        if (ableToMove)
+        {
+            // Get the horizontal input (A/D or Left/Right arrow keys) and store it in moveX
+            float moveX = Input.GetAxisRaw("Horizontal");
+            // Get the vertical input (W/S or Up/Down arrow keys) and store it in moveY
+            float moveY = Input.GetAxisRaw("Vertical");
+            // Create a new Vector2 for the movement direction based on moveX and moveY
+            Vector2 movement = new Vector2(moveX, moveY);
+            // Set the player's velocity to the movement direction multiplied by the movement speed
+            rb.velocity = movement * moveSpeed;
+        }
+    }
+
+    //When hit by Reg Zom (from Player_Hit)
+    public void stopMovement()
+    {
+        ableToMove = false;
+        Invoke("RestoreMovement", 0.5f);
+    }
+
+    void RestoreMovement()
+    {
+        ableToMove = true;
     }
 }
