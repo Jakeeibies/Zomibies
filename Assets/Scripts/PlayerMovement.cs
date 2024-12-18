@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Define the Player_Movement class, which inherits from MonoBehaviour
-public class Player_Movement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    // Declare a Rigidbody2D variable to hold the player's Rigidbody2D component
-    Rigidbody2D rb;
-    // Declare a float variable to set the player's movement speed
+    // Movement variables
     public float moveSpeed;
     public bool ableToMove = true;
+
+    // Components
+    Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,7 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
-    //When hit by Reg Zom (from Player_Hit)
+    // When hit by Reg Zom (from Player_Hit)
     public void stopMovement()
     {
         ableToMove = false;

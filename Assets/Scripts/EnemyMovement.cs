@@ -3,15 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Define the Enemy_Movement class, which inherits from MonoBehaviour
-public class Enemy_Movement : MonoBehaviour
+public class EnemyMovement : MonoBehaviour
 {
+    // Player reference
     public Transform player;
-    Rigidbody2D rb;
+
+    // Movement variables
     public float moveSpeed = 2f;
     public float followDistance = 5f;
-    bool alert = false;
     public float distMult = 1.5f;
+    bool alert = false;
     float previousSpeed;
+
+    // Separation variables
+    public float separationDistance = 1f; // Minimum distance between enemies
+    public float separationForce = 1f; // Force to apply for separation
+
+    // Components
+    Rigidbody2D rb;
 
     void Start()
     {
@@ -39,6 +48,9 @@ public class Enemy_Movement : MonoBehaviour
             alert = false;
         }
         Debug.Log(moveSpeed);
+
+        // Apply separation force to prevent overlapping with other enemies
+        ApplySeparationForce();
     }
 
     void followPlayer()
@@ -47,6 +59,19 @@ public class Enemy_Movement : MonoBehaviour
         Vector2 direction = (player.position - transform.position).normalized;
         // Move the enemy towards the player at the specified movement speed
         transform.position = Vector2.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
+    }
+
+    void ApplySeparationForce()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, separationDistance);
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.gameObject != gameObject && collider.CompareTag("Enemy"))
+            {
+                Vector2 direction = (transform.position - collider.transform.position).normalized;
+                rb.AddForce(direction * separationForce);
+            }
+        }
     }
 
     public void InvokeStop()
@@ -62,7 +87,5 @@ public class Enemy_Movement : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         moveSpeed = previousSpeed;
     }
-
-    
 }
 
